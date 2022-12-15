@@ -1,5 +1,7 @@
 import streams from "../apis/streams";
 
+import history from "../history";
+
 import {
   SIGN_IN,
   SIGN_OUT,
@@ -28,6 +30,9 @@ export const createStream = (formValues) => async (dispatch, getState) => {
   const response = await streams.post("/streams", { ...formValues, userId });
 
   dispatch({ type: CREATE_STREAM, payload: response.data });
+  //doing programmatic navigation so that user goes to
+  //home page after creating the form
+  history.push("/");
 };
 
 export const fetchStreams = () => async (dispatch) => {
@@ -43,9 +48,14 @@ export const fetchStream = (id) => async (dispatch) => {
 };
 
 export const editStream = (id, formValues) => async (dispatch) => {
-  const response = await streams.put(`/streams/${id}`, formValues);
+  // using patch instead of put since 'put' would replace all data
+  // whereas patch updates only the selected data
+  const response = await streams.patch(`/streams/${id}`, formValues);
 
   dispatch({ type: EDIT_STREAM, payload: response.data });
+  //doing programmatic navigation so that user goes to
+  //home page after editing the form
+  history.push("/");
 };
 
 export const deleteStream = (id) => async (dispatch) => {
