@@ -3,6 +3,9 @@ import React from "react";
 // and reduxForm -> a connector function to connect the form to redux store
 import { Field, reduxForm } from "redux-form";
 
+import { connect } from "react-redux";
+//importing action creator for Creating a stream
+import { createStream } from "../../actions";
 class StreamCreate extends React.Component {
   //creating an error handeling method
   renderError({ error, touched }) {
@@ -34,9 +37,9 @@ class StreamCreate extends React.Component {
   //creating a config method to pass values to
   //the predefined handleSubmit function
   //this method does not recieve an event but values of the fields in form
-  onSubmit(formValues) {
-    console.log(formValues);
-  }
+  onSubmit = (formValues) => {
+    this.props.createStream(formValues);
+  };
 
   render() {
     return (
@@ -72,9 +75,11 @@ const validate = (formValues) => {
 };
 
 //implementing reduxForm function
-export default reduxForm({
+const wrappedComponent = reduxForm({
   // passing the name of form to store
   form: "streamCreate",
   //passing the validate function to store(validate:validate)
   validate,
 })(StreamCreate);
+
+export default connect(null, { createStream })(wrappedComponent);
